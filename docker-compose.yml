@@ -1,0 +1,34 @@
+services:
+  data-connector:
+    image: verida/dcs:latest
+    init: true
+    network_mode: host
+    restart: unless-stopped
+    environment:
+      - ADMIN_PASSWORD=admin
+      - SSL_ENABLED=false
+  
+  # Caddy
+  caddy:
+    image: caddy:latest
+    init: true
+    network_mode: host
+    restart: unless-stopped
+    depends_on: 
+      - data-connector
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile    # Using dummy ports to test
+    
+  # acme
+  acme:
+    build: 
+      context: .
+      dockerfile: Dockerfile.acme
+    init: true
+    network_mode: host
+    restart: unless-stopped
+    depends_on:
+      - data-connector
+      - caddy
+    volumes:
+      - ./app/id.sec:/app/id.sec

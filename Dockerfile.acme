@@ -1,0 +1,12 @@
+# Build stage
+FROM rust:latest AS build
+WORKDIR /build
+RUN git clone https://github.com/marlinprotocol/oyster-caddy-account-uri.git
+WORKDIR /build/oyster-caddy-account-uri/signer
+RUN cargo build --release
+
+# Final stage
+FROM ubuntu:22.04
+COPY --from=build --chown=10005:10005 /build/oyster-caddy-account-uri/signer/target/release/signer /app/acme-id
+WORKDIR /app
+CMD ["./acme-id"]

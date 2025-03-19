@@ -1,0 +1,15 @@
+:8080 {
+	respond "I am 8080, You should also be able to access the same on localhost:3031"
+}
+
+:8081 {
+	respond "I am 8081, You should also be able to access the same on localhost:3030"
+}
+
+:3030 {
+    reverse_proxy 127.0.0.1:8081
+}
+
+:3031 {
+	reverse_proxy 127.0.0.1:8080
+}
