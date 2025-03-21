@@ -17,13 +17,11 @@ services:
     depends_on: 
       - data-connector
     volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile    # Using dummy ports to test
+      - /init-params/Caddyfile:/etc/caddy/Caddyfile    # Using dummy ports to test
     
   # acme
   acme:
-    build: 
-      context: .
-      dockerfile: Dockerfile.acme
+    image: kalpita888/acme_amd64:0.0.1
     init: true
     network_mode: host
     restart: unless-stopped
@@ -31,4 +29,4 @@ services:
       - data-connector
       - caddy
     volumes:
-      - ./app/id.sec:/app/id.sec
+      - /app/id.sec:/app/id.sec
